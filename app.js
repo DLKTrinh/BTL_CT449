@@ -3,11 +3,22 @@ const cors = require("cors");
 const ApiError = require("./app/api-error");
 
 const app = express();
-const contactsRouter = require("./app/routes/contact.route");
+const docgiaRouter = require("./app/routes/docgia.route");
+const nhanvienRouter = require("./app/routes/nhanvien.route");
+const sachRouter = require("./app/routes/sach.route");
+const nxbRouter = require("./app/routes/nxb.route");
+const muonsachRouter = require("./app/routes/muonsach.route");
+
 
 app.use(cors());
 app.use(express.json());
-app.use("/api/contacts", contactsRouter);
+app.use("/api/docgia", docgiaRouter);
+app.use("/api/nhanvien", nhanvienRouter);
+app.use("/api/sach", sachRouter);
+app.use("/api/nxb", nxbRouter);
+app.use("/api/muonsach", muonsachRouter);
+
+
 
 app.use((req, res, next) => {
     return next(new ApiError(404, "Resource not found"));

@@ -1,5 +1,5 @@
 const MongoDB = require("../utils/mongodb.util");
-const ContactService = require("../services/contact.service");
+const NhanVienService = require("../services/nhanvien.service");
 const ApiError = require("../api-error");
 
 exports.create = async (req, res, next) => {
@@ -8,8 +8,8 @@ exports.create = async (req, res, next) => {
     }
 
     try{
-        const contactService = new ContactService(MongoDB.client);
-        const document = await contactService.create(req.body);
+        const nhanvienService = new NhanVienService(MongoDB.client);
+        const document = await nhanvienService.create(req.body);
         return res.send(document);
     } catch(error){
         console.log(error)
@@ -23,12 +23,12 @@ exports.findAll = async (req, res, next) => {
     let document = [];
 
     try {
-        const contactService = new ContactService(MongoDB.client);
+        const nhanvienService = new NhanVienService(MongoDB.client);
         const {name} = req.query;
         if(name) {
-            documents = await contactService.findByName(name);
+            documents = await nhanvienService.findByName(name);
         } else {
-            documents = await contactService.find({});
+            documents = await nhanvienService.find({});
         }
     } catch(error) {
         return next(
@@ -41,8 +41,8 @@ exports.findAll = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
     try{
-        const contactService = new ContactService(MongoDB.client);
-        const document = await contactService.findById(req.params.id);
+        const nhanvienService = new NhanVienService(MongoDB.client);
+        const document = await nhanvienService.findById(req.params.id);
         if(!document) {
             return next(new ApiError(404,"Contact not found"));
         }
@@ -63,8 +63,8 @@ exports.update = async (req, res, next) => {
     }
 
     try{
-        const contactService = new ContactService(MongoDB.client);
-        const document = await contactService.update(req.params.id, req.body);
+        const nhanvienService = new NhanVienService(MongoDB.client);
+        const document = await nhanvienService.update(req.params.id, req.body);
         if (!document) {
             return next(new ApiError(404, "Contact not found"));
         }
@@ -78,8 +78,8 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try{
-        const contactService = new ContactService(MongoDB.client);
-        const document = await contactService.delete(req.params.id);
+        const nhanvienService = new NhanVienService(MongoDB.client);
+        const document = await nhanvienService.delete(req.params.id);
         if(!document) {
             return next(new ApiError(404,"Contact not found"));
         }
@@ -96,8 +96,8 @@ exports.delete = async (req, res, next) => {
 
 exports.deleteAll = async (req, res) => {
     try {
-        const contactService = new ContactService(MongoDB.client);
-        const deleteCount = await contactService.deleteAll();
+        const nhanvienService = new NhanVienService(MongoDB.client);
+        const deleteCount = await nhanvienService.deleteAll();
         return res.send({
             message: `${deleteCount} contacts were deleted successfully`,
         });
@@ -108,17 +108,3 @@ exports.deleteAll = async (req, res) => {
     }
 };
 
-exports.findAllFavorite = async (_req, res, next) => {
-    try{
-        const contactService = new ContactService(MongoDB.client);
-        const documents = await contactService.findFavorite();
-        return res.send(documents);
-    } catch (error) {
-        return next(
-            new ApiError(
-                500,
-                "An error occured while retrieving favorite contacts"
-            )
-        );
-    }
-};

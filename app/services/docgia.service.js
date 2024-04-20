@@ -1,36 +1,37 @@
 const { ObjectId } = require("mongodb");
 
-class ContactService {
+class DocGiaService {
     constructor(client) {
-        this.Contact = client.db().collection("contacts");
+        this.DocGia = client.db().collection("docgia");
     }
 
-    extractConactData(payload) {
-        const contact = {
+    extractDocGiaData(payload) {
+        const docgia = {
+            surname: payload.surname,
             name: payload.name,
-            email: payload.email,
+            birthday: payload.birthday,
+            sex: payload.sex,
             address: payload.address,
             phone: payload.phone,
-            favorite: payload.favorite,
         };
 
-        Object.keys(contact).forEach(
-            (key) => contact[key] === undefined && delete contact[key]
+        Object.keys(docgia).forEach(
+            (key) => docgia[key] === undefined && delete docgia[key]
         );
-        return contact;
+        return docgia;
     }
     async create(payload) {
-        const contact = this.extractConactData(payload);
-        const result = await this.Contact.findOneAndUpdate(
-            contact,
-            { $set: { favorite: contact.favorite === true } },
+        const docgia = this.extractDocGiaData(payload);
+        const result = await this.DocGia.findOneAndUpdate(
+            docgia,
+            { $set: {} },
             { returnDocument: "after", upsert: true }
         );
         return result.value;
     }
 
     async find(filter) {
-        const cursor = await this.Contact.find(filter);
+        const cursor = await this.DocGia.find(filter);
         return await cursor.toArray();
     }
 
@@ -41,7 +42,7 @@ class ContactService {
     }
 
     async findById(id) {
-        return await this.Contact.findOne({
+        return await this.DocGia.findOne({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
     }
@@ -50,8 +51,8 @@ class ContactService {
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
-        const update = this.extractConactData(payload);
-        const result = await this.Contact.findOneAndUpdate(
+        const update = this.extractDocGiaData(payload);
+        const result = await this.DocGia.findOneAndUpdate(
             filter,
             { $set: update },
             { returnDocument: "after" }
@@ -60,20 +61,16 @@ class ContactService {
     }
 
     async delete(id) {
-        const result = await this.Contact.findOneAndDelete({
+        const result = await this.DocGia.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
         return result.value;
     }
 
     async deleteAll() {
-        const result = await this.Contact.deleteMany({});
+        const result = await this.DocGia.deleteMany({});
         return result.deletedCount;
-    }
-
-    async findFavorite() {
-        return await this.find({ favorite: true });
     }
 }
 
-module.exports = ContactService;
+module.exports = DocGiaService;
