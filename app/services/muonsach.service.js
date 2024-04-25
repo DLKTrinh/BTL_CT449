@@ -8,9 +8,9 @@ class MuonSachService {
     extractMuonSachData(payload) {
         const muonsach = {
             name: payload.name,
-            book: payload.book,
+            reader: payload.reader,
             borrow: payload.borrow,
-            return: payload.return
+            returns: payload.returns
         };
 
         Object.keys(muonsach).forEach(

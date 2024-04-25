@@ -108,17 +108,4 @@ exports.deleteAll = async (req, res) => {
     }
 };
 
-exports.findAllFavorite = async (_req, res, next) => {
-    try{
-        const nxbService = new NXBService(MongoDB.client);
-        const documents = await nxbService.findFavorite();
-        return res.send(documents);
-    } catch (error) {
-        return next(
-            new ApiError(
-                500,
-                "An error occured while retrieving favorite "
-            )
-        );
-    }
-};
+

@@ -107,18 +107,3 @@ exports.deleteAll = async (req, res) => {
         );
     }
 };
-
-exports.findAllFavorite = async (_req, res, next) => {
-    try{
-        const sachService = new SachService(MongoDB.client);
-        const documents = await sachService.findFavorite();
-        return res.send(documents);
-    } catch (error) {
-        return next(
-            new ApiError(
-                500,
-                "An error occured while retrieving favorite "
-            )
-        );
-    }
-};

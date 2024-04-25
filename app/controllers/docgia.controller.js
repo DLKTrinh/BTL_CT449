@@ -108,17 +108,4 @@ exports.deleteAll = async (req, res) => {
     }
 };
 
-exports.findAllFavorite = async (_req, res, next) => {
-    try{
-        const docgiaService = new DocGiaService(MongoDB.client);
-        const documents = await docgiaService.findFavorite();
-        return res.send(documents);
-    } catch (error) {
-        return next(
-            new ApiError(
-                500,
-                "An error occured while retrieving favorite DocGias"
-            )
-        );
-    }
-};
+
